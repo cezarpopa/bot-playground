@@ -1,14 +1,32 @@
-# https://help.github.com/en/github/administering-a-repository/configuration-options-for-dependency-updates#target-branch
-version: 2
+name: dependabot-auto-merge
+on: pull_request_target
 
-updates:
-  - allow:
-      - dependency-type: "direct"
-    directory: "/"
-    labels:
-      - "dependencies"
-    open-pull-requests-limit: 99
-    package-ecosystem: composer
-    schedule:
-      interval: weekly
-    versioning-strategy: "lockfile-only"
+permissions:
+  pull-requests: write
+  contents: write
+
+jobs:
+  dependabot:
+    runs-on: ubuntu-latest
+    if: ${{ github.actor == 'dependabot[bot]' }}
+    steps:
+    
+      - name: Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v1.3.3
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+          
+      - name: Auto-merge Dependabot PRs for semver-minor updates
+        if: ${{steps.metadata.outputs.update-type == 'version-update:semver-minor'}}
+        run: gh pr merge --auto --merge "$PR_URL"
+        env:
+          PR_URL: ${{github.event.pull_request.html_url}}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          
+      - name: Auto-merge Dependabot PRs for semver-patch updates
+        if: ${{steps.metadata.outputs.update-type == 'version-update:semver-patch'}}
+        run: gh pr merge --auto --merge "$PR_URL"
+        env:
+          PR_URL: ${{github.event.pull_request.html_url}}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
