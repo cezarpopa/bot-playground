@@ -3,7 +3,7 @@
     "description": "Dependabot test",
     "type": "project",
     "require": {
-        "symfony/symfony": "5"
+        "symfony/symfony": "^5"
     },
     "authors": [
         {
