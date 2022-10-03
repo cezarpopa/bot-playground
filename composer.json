@@ -1,0 +1,14 @@
+{
+    "name": "cezarpopa/bot-playground",
+    "description": "Dependabot test",
+    "type": "project",
+    "require": {
+        "symfony/symfony": "5"
+    },
+    "authors": [
+        {
+            "name": "Cezar Popa",
+            "email": "cezarpopa@users.noreply.github.com"
+        }
+    ]
+}
